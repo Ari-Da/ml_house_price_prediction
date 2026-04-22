@@ -4,7 +4,7 @@ from pathlib import Path
 import pandas as pd
 from models.linear_regression import LinearRegressionClassifier
 from models.mlp_classifier import MLPClassifierModel
-from plots.data_plot import plot_class_distribution
+from plots.data_plot import plot_class_distribution, plot_correlation_heatmap
 from plots.linear_regression_plot import plot_linear_regression
 from plots.mlp_classifier_plot import plot_mlp_classifier
 from preprocess import preprocess
@@ -35,6 +35,10 @@ def main():
     # %%
     # Plot the preprocessed data: price category class distribution
     plot_class_distribution(house_price_df)
+
+    # %%
+    # Feature correlation heatmap (includes the target, price_category)
+    plot_correlation_heatmap(house_price_df)
 
     # %% [markdown]
     # # Linear Regression Training

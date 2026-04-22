@@ -2,6 +2,31 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
+def plot_correlation_heatmap(df: pd.DataFrame):
+    # Coerce booleans (one-hot columns) to int so df.corr() treats them numerically
+    numeric_df = df.astype(float)
+    corr = numeric_df.corr()
+
+    _, ax = plt.subplots(figsize=(11, 9))
+    im = ax.imshow(corr.values, cmap='RdBu_r', vmin=-1, vmax=1, aspect='auto')
+
+    ax.set_xticks(range(len(corr.columns)))
+    ax.set_yticks(range(len(corr.columns)))
+    ax.set_xticklabels(corr.columns, rotation=45, ha='right')
+    ax.set_yticklabels(corr.columns)
+
+    for i in range(len(corr.columns)):
+        for j in range(len(corr.columns)):
+            val = corr.values[i, j]
+            color = 'white' if abs(val) > 0.5 else 'black'
+            ax.text(j, i, f'{val:.2f}', ha='center', va='center', color=color, fontsize=8)
+
+    plt.colorbar(im, ax=ax, label='Pearson correlation')
+    ax.set_title('Feature Correlation Heatmap')
+    plt.tight_layout()
+    plt.show()
+
+
 def plot_class_distribution(df: pd.DataFrame, target_col: str = 'price_category'):
     counts = df[target_col].value_counts().sort_index()
 

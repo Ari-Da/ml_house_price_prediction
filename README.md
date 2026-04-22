@@ -55,7 +55,10 @@ Both models live in their own module and are orchestrated by [main.py](main.py).
 
 `main.py` calls three plotting helpers from the [plots/](plots/) folder:
 
-- **[plots/data_plot.py](plots/data_plot.py)** — `plot_class_distribution` shows how many houses fall into each price class with counts and percentages. Called before training to give context on the target distribution.
+- **[plots/data_plot.py](plots/data_plot.py)** — two helpers:
+  - `plot_class_distribution` shows how many houses fall into each price class with counts and percentages.
+  - `plot_correlation_heatmap` renders a Pearson correlation heatmap across all features and the target, so you can quickly see which features move with `price_category`.
+  Both are called before training to give context on the target distribution and feature relationships.
 - **[plots/linear_regression_plot.py](plots/linear_regression_plot.py)** — bar chart of per-fold balanced accuracy with the mean drawn as a horizontal line; the best-performing fold is highlighted in light green.
 - **[plots/mlp_classifier_plot.py](plots/mlp_classifier_plot.py)** — grouped bar chart across the full (hidden size × learning rate) grid with error bars for std; the best config is outlined in green.
 
