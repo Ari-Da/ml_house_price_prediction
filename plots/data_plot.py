@@ -1,5 +1,8 @@
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
+
+from preprocess import BIN_CONFIGS, CLASS_THRESHOLD_KEY
 
 
 def plot_correlation_heatmap(df: pd.DataFrame):
@@ -30,13 +33,14 @@ def plot_correlation_heatmap(df: pd.DataFrame):
 def plot_class_distribution(df: pd.DataFrame, target_col: str = 'price_category'):
     counts = df[target_col].value_counts().sort_index()
 
+    active = BIN_CONFIGS[CLASS_THRESHOLD_KEY]
     class_labels = {
-        0: 'Class 0\n(≤ 5M)',
-        1: 'Class 1\n(5M – 10M)',
-        2: 'Class 2\n(> 10M)',
+        0: f'Class 0\n(≤ {active["lower_name"]}M)',
+        1: f'Class 1\n({active["lower_name"]}M – {active["upper_name"]}M)',
+        2: f'Class 2\n(> {active["upper_name"]}M)',
     }
     labels = [class_labels.get(c, str(c)) for c in counts.index]
-    colors = ['#4B0082', '#8951A5', '#C8A2C8']
+    colors = ['#B85C1F', '#E68A3C', '#F4C28A']
 
     _, ax = plt.subplots(figsize=(8, 5))
     bars = ax.bar(labels, counts.values, color=colors, edgecolor='black', alpha=0.9)
@@ -51,6 +55,44 @@ def plot_class_distribution(df: pd.DataFrame, target_col: str = 'price_category'
     ax.set_ylabel('Number of Records')
     ax.set_title(f'Price Category Distribution (n = {total})')
     ax.set_ylim(0, max(counts.values) * 1.18)
+    ax.grid(axis='y', alpha=0.3)
+
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_bin_distribution_comparison():
+    # Hardcoded counts from prior exploration runs across different bin threshold pairs.
+    # See memory: project_bin_exploration.md
+    configs = [
+        {'label': '5M / 10M', 'counts': [350, 187, 8]},
+        {'label': '2.5M / 5M', 'counts': [32, 318, 195]},
+        {'label': '4M / 6M', 'counts': [219, 209, 117]},
+        {'label': '3.5M / 5.5M', 'counts': [158, 230, 157]},
+        {'label': '4M / 5.5M', 'counts': [219, 169, 157]},
+    ]
+
+    x = np.arange(len(configs))
+    width = 0.25
+    colors = ['#B85C1F', '#E68A3C', '#F4C28A']
+    class_names = ['Class 0', 'Class 1', 'Class 2']
+
+    _, ax = plt.subplots(figsize=(12, 6))
+    for j in range(3):
+        offset = (j - 1) * width
+        values = [c['counts'][j] for c in configs]
+        bars = ax.bar(x + offset, values, width, label=class_names[j],
+                      color=colors[j], edgecolor='black')
+        for bar, v in zip(bars, values):
+            ax.text(bar.get_x() + bar.get_width() / 2, v + 3, str(v),
+                    ha='center', va='bottom', fontsize=9)
+
+    ax.set_xlabel('Bin thresholds (low / high)')
+    ax.set_ylabel('Number of Records')
+    ax.set_title('Price Bin Thresholds — Class Distribution Comparison')
+    ax.set_xticks(x)
+    ax.set_xticklabels([c['label'] for c in configs])
+    ax.legend(title='Class')
     ax.grid(axis='y', alpha=0.3)
 
     plt.tight_layout()

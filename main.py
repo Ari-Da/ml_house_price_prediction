@@ -4,24 +4,24 @@ from pathlib import Path
 import pandas as pd
 from models.linear_regression import LinearRegressionClassifier
 from models.mlp_classifier import MLPClassifierModel
-from plots.data_plot import plot_class_distribution, plot_correlation_heatmap
+from plots.data_plot import plot_bin_distribution_comparison, plot_class_distribution, plot_correlation_heatmap
 from plots.linear_regression_plot import plot_linear_regression
 from plots.mlp_classifier_plot import plot_mlp_classifier
-from preprocess import preprocess
+from preprocess import CLASS_THRESHOLD_KEY, preprocess, processed_data_path
 from rich.console import Console
 from rich.rule import Rule
 from rich.table import Table
 
 
 RAW_DATA_PATH = 'data/housing_price_data.csv'
-DATA_PATH = 'data/housing_price_process_data.csv'
+DATA_PATH = processed_data_path(CLASS_THRESHOLD_KEY)
 
 
 def _ensure_preprocessed_data():
     if Path(DATA_PATH).exists():
         return
     print(f'Preprocessed data not found at {DATA_PATH}. Running preprocessing...')
-    df = preprocess(RAW_DATA_PATH)
+    df = preprocess(RAW_DATA_PATH, key=CLASS_THRESHOLD_KEY)
     df.to_csv(DATA_PATH, index=False)
     print(f'Preprocessed data written to {DATA_PATH}')
 
@@ -31,6 +31,10 @@ def main():
     # Ensure preprocessed data exists before reading it
     _ensure_preprocessed_data()
     house_price_df = pd.read_csv(DATA_PATH)
+
+    # %%
+    # Compare class distributions across all bin threshold pairs we explored
+    plot_bin_distribution_comparison()
 
     # %%
     # Plot the preprocessed data: price category class distribution
@@ -91,7 +95,7 @@ def main():
     mlp_grouped = sorted(mlp_results, key=lambda r: (r['hidden_size'], r['learning_rate']))
     best = max(mlp_results, key=lambda r: r['mean'])
 
-    mlp_table = Table(title='MLPClassifier — 5-Fold Cross Validation')
+    mlp_table = Table(title='MLPClassifier - 5-Fold Cross Validation')
     mlp_table.add_column('Hidden Size', justify='right')
     mlp_table.add_column('Learning Rate', justify='right')
     mlp_table.add_column('Mean Balanced Accuracy', justify='right')

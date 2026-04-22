@@ -34,7 +34,9 @@ class LinearRegressionClassifier:
 
             score = balanced_accuracy_score(y_test, y_pred)
             fold_scores.append(score)
-            #print(f"  Fold {fold}: balanced accuracy = {score:.4f}")
+            print(f"  Fold {fold}: balanced accuracy = {score:.4f}")
+
+        print('\n')
 
         fold_scores = np.array(fold_scores)
         return {
