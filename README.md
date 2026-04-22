@@ -101,4 +101,4 @@ python main.py
 
 ## Author
 
-**Ariana Daka** — ad2487@njit.edu
+**Ariana Daka** — ariana.daka@gmail.com, ad2487@njit.edu
