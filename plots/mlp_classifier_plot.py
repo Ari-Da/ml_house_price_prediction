@@ -22,8 +22,8 @@ def plot_mlp_classifier(results: list[dict]):
     x = np.arange(len(hidden_sizes))
     width = 0.25
     # Learning rates are already sorted ascending: [0.001, 0.01, 0.1]
-    # Color palette: dark purple → medium purple → lilac
-    colors = ['#4B0082', '#8951A5', '#C8A2C8']
+    # Color palette: dark red → red → light red
+    colors = ['#8B0000', '#DC143C', '#FF6666']
 
     for j, lr in enumerate(learning_rates):
         offset = (j - (len(learning_rates) - 1) / 2) * width
@@ -31,7 +31,7 @@ def plot_mlp_classifier(results: list[dict]):
                       label=f'lr={lr}', color=colors[j], capsize=3,
                       edgecolor='black', linewidth=0.5)
         if j == best_lr_idx:
-            bars[best_hidden_idx].set_edgecolor('green')
+            bars[best_hidden_idx].set_edgecolor('gold')
             bars[best_hidden_idx].set_linewidth(2.5)
 
     ax.set_xlabel('Hidden Layer Size')
@@ -47,7 +47,7 @@ def plot_mlp_classifier(results: list[dict]):
                   f'lr={best["learning_rate"]} → {best["mean"]:.2f}')
     ax.annotate(best_label, xy=(0.02, 0.98), xycoords='axes fraction',
                 va='top', ha='left', fontsize=9,
-                bbox=dict(boxstyle='round', facecolor='white', edgecolor='green', alpha=0.9))
+                bbox=dict(boxstyle='round', facecolor='white', edgecolor='gold', alpha=0.9))
 
     plt.tight_layout()
     plt.show()

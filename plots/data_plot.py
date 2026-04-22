@@ -36,7 +36,7 @@ def plot_class_distribution(df: pd.DataFrame, target_col: str = 'price_category'
         2: 'Class 2\n(> 10M)',
     }
     labels = [class_labels.get(c, str(c)) for c in counts.index]
-    colors = ['#A8DADC', '#457B9D', '#1D3557']
+    colors = ['#4B0082', '#8951A5', '#C8A2C8']
 
     _, ax = plt.subplots(figsize=(8, 5))
     bars = ax.bar(labels, counts.values, color=colors, edgecolor='black', alpha=0.9)
@@ -48,7 +48,7 @@ def plot_class_distribution(df: pd.DataFrame, target_col: str = 'price_category'
                 f'{count}\n({pct:.1f}%)', ha='center', va='bottom', fontsize=10)
 
     ax.set_xlabel('Price Category')
-    ax.set_ylabel('Number of Houses')
+    ax.set_ylabel('Number of Records')
     ax.set_title(f'Price Category Distribution (n = {total})')
     ax.set_ylim(0, max(counts.values) * 1.18)
     ax.grid(axis='y', alpha=0.3)
